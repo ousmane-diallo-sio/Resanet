@@ -1,0 +1,58 @@
+{% include "vueEntete.html" %}
+{% include "vueEnteteGestionnaire.html" %}
+
+
+<div style="background-color:#833; color:#fff; display:flex; justify-content:center; border-radius: 2px; margin-bottom:40px">
+
+    <h4>
+        {% print nomGestionnaire + ' ' +  prenomGestionnaire %}
+    </h4>
+
+</div>
+
+
+<p style="margin-bottom:15px ;font-weight:bold; text-decoration:underline;">
+    Liste du personnel sans carte de restauration :
+</p>
+
+
+
+<table class="table">
+    <thead style="color:#a22">
+        <tr>
+            <th>N° Carte</th>
+            <th>Matricule</th>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th>Service</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        {% for i in range(0, lenPersonnelSansCarte) %}
+        <tr>
+            <td>{% print personnelSansCarte[i]['matricule'] %}</td>
+            <td>{% print personnelSansCarte[i]['matricule'] %}</td>
+            <td>{% print personnelSansCarte[i]['nom'] %}</td>
+            <td>{% print personnelSansCarte[i]['prenom'] %}</td>
+            <td>{% print personnelSansCarte[i]['nomService'] %}</td>
+             <td>
+                 <button style="color:#eee; background-color: #383; border-radius:5px; padding:7px; border-width:0px; border-color:#000"
+                    onclick="location.href= '/gestionnaire/listePersonnelSansCarte/creerCarte/ {{personnelSansCarte[i]['matricule']}} ' ">
+                    Créer Carte
+                </button>
+             </td>
+        </tr>
+        {% endfor %}
+
+    </tbody>
+</table>
+<br>
+
+
+
+
+
+
+{% include "vuePied.html" %}>

@@ -1,0 +1,50 @@
+{% include "vueEntete.html" %}
+{% include "vueEnteteGestionnaire.html" %}
+
+
+    <h3 style="background-color:#833; color:#fff; border-radius:10px; padding:5px;
+               text-align:center; margin:5px; align-self:center">Historique de la carte</h3>
+
+
+</br></br>
+
+{% print historiqueCarte %}
+
+
+<!--
+{% for i in range(0, lenHistoriqueCarte) %}
+
+<table class="table">
+    <thead style="color:#000; text-decoration: underline">
+        <tr>
+            <th>N° Carte</th>
+            <th>Solde</th>
+            <th>Matricule</th>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th>Service</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+
+
+        {% for i in range(0, lenPersonnelAvecCarte) %}
+        <tr>
+            <td>{% print personnelAvecCarte[i]['matricule'] %}</td>
+            <td>{% print personnelAvecCarte[i]['solde'] %}</td>
+            <td>{% print personnelAvecCarte[i]['matricule'] %}</td>
+            <td>{% print personnelAvecCarte[i]['nom'] %}</td>
+            <td>{% print personnelAvecCarte[i]['prenom'] %}</td>
+            <td>{% print personnelAvecCarte[i]['nomService'] %}</td>
+
+
+    </tbody>
+</table>
+
+{% endofor %}
+-->
+
+
+{% include "vuePied.html" %}

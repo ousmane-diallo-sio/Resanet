@@ -84,6 +84,7 @@ def seConnecterUsager( numeroCarte , mdpCarte ) :
 
 
 def getSolde( numeroCarte ) :
+	print '[START] modeleResanet::getSolde()'
 	try :
 		curseur = getConnexionBD().cursor()
 		requete = '''
@@ -102,13 +103,16 @@ def getSolde( numeroCarte ) :
 			#print type(solde)
 			
 		curseur.close()
+		print '[END] modeleResanet::getSolde()'
 		return solde
 		
 	except :
+		print '[END] modeleResanet::getSolde()'
 		return None
 		
 		
 def getTarifRepas( numeroCarte ) :
+	print '[START] modeleResanet::getTarifRepas()'
 	try :
 		curseur = getConnexionBD().cursor()
 		requete = '''
@@ -122,7 +126,7 @@ def getTarifRepas( numeroCarte ) :
 				'''
 
 		curseur.execute( requete , ( numeroCarte , ) )
-		
+
 		enregistrement = curseur.fetchone()
 		
 		tarif = 'inconnu'
@@ -131,9 +135,11 @@ def getTarifRepas( numeroCarte ) :
 			#print type(tarif)
 			
 		curseur.close()
+		print '[END] modeleResanet::getTarifRepas()'
 		return tarif
 		
 	except :
+		print '[END] modeleResanet::getTarifRepas()'
 		return None
 
 def getPersonnelsSansCarte() :
@@ -373,6 +379,7 @@ def annulerReservation( numeroCarte , dateReservation ):
 
 
 def getReservationsCarte( numeroCarte , dateDebut , dateFin ):
+	print '[START] modeleResanet::getReservationsCarte()'
 	try:
 		curseur = getConnexionBD().cursor()
 		requete = '''
@@ -395,9 +402,11 @@ def getReservationsCarte( numeroCarte , dateDebut , dateFin ):
 			dates.append( uneDate )
 
 		curseur.close()
+		print '[END] modeleResanet::getReservationsCarte()'
 		return dates
 
 	except:
+		print '[END] modeleResanet::getReservationsCarte()'
 		return None
 
 

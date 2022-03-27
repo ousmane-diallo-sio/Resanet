@@ -1,0 +1,130 @@
+{% include "vueEntete.html" %}
+{% include "vueEnteteGestionnaire.html" %}
+
+
+<div style="background-color:#833; color:#fff; display:flex; justify-content:center; border-radius: 2px; margin-bottom:30px">
+
+    <h4>
+        {% print nomGestionnaire + ' ' +  prenomGestionnaire %}
+    </h4>
+
+</div>
+
+
+
+<p style="margin-bottom:30px ;font-weight:bold; color:#111">
+    Liste du personnel avec carte de restauration :
+</p>
+
+
+
+
+<table class="table">
+    <thead style="color:#000; text-decoration: underline">
+        <tr>
+            <th>N° Carte</th>
+            <th>Solde</th>
+            <th>Matricule</th>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th>Service</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+
+
+        {% for i in range(0, lenPersonnelAvecCarte) %}
+        <tr>
+            <td>{% print personnelAvecCarte[i]['matricule'] %}</td>
+            <td>{% print personnelAvecCarte[i]['solde'] %}</td>
+            <td>{% print personnelAvecCarte[i]['matricule'] %}</td>
+            <td>{% print personnelAvecCarte[i]['nom'] %}</td>
+            <td>{% print personnelAvecCarte[i]['prenom'] %}</td>
+            <td>{% print personnelAvecCarte[i]['nomService'] %}</td>
+
+
+            {%if personnelAvecCarte[i]['activee'] == 1%}
+
+
+                <td>
+
+                    <div style="flex-direction:row">
+
+                        <!--<p>{%print sommeCrediter%}</p>
+
+                        <button onclick="{{augmenterSommeCrediter}}">+</button>
+                        <button onclick="{{diminuerSommeCrediter}}">-</button>-->
+
+                    </div>
+
+                    <button style="color:#eee; background-color: #000; border-radius:5px; padding:5px;"
+                        onclick="location.href= '/gestionnaire/listePersonnelAvecCarte/crediterCarte/ {{personnelAvecCarte[i]['matricule']}} / {{10}} ' ">
+                        Créditer
+                    </button>
+                </td>
+            {%else%}
+
+                <td></td>
+            {%endif%}
+
+
+            <td>
+                {%if personnelAvecCarte[i]['activee'] == 1%}
+
+                    <button style="color:#fff; background-color: #c33; border-radius:5px; padding:5px; width:70px"
+                            onclick="location.href='/gestionnaire/listePersonnelAvecCarte/bloquerCarte/ {{personnelAvecCarte[i]['matricule']}}' ">
+                        Bloquer
+                    </button>
+
+                {%else%}
+
+                    <button style="color:#fff; background-color: #3b3; border-radius:5px; padding:5px; width:70px"
+                            onclick="location.href='/gestionnaire/listePersonnelAvecCarte/activerCarte/ {{personnelAvecCarte[i]['matricule']}}' ">
+                        Activer
+                    </button>
+
+                {%endif%}
+            </td>
+
+
+
+            {%if personnelAvecCarte[i]['activee'] == 1%}
+
+                <td>
+                    <button style="color:#000; background-color: #ccc; border-radius:5px; padding:5px; position: relative"
+                            onclick=", location.href='/gestionnaire/listePersonnelAvecCarte/reinitialiserMdp/ {{personnelAvecCarte[i]['matricule']}}' ">
+
+                            Init.MDP
+
+                    </button>
+                </td>
+
+            {%else%}
+
+                <td></td>
+
+            {%endif%}
+
+            <td>
+                        <button style="color:#ccc; background-color: #222; border-radius:10px; padding:6px;"
+                                onclick="location.href='/gestionnaire/listePersonnelAvecCarte/historique/ {{personnelAvecCarte[i]['matricule']}}' ">
+                            Historique
+                        </button>
+            </td>
+
+
+        </tr>
+        {% endfor %}
+
+    </tbody>
+</table>
+<br>
+
+
+
+
+
+
+{% include "vuePied.html" %}

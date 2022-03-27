@@ -33,7 +33,7 @@ def seConnecterUsager() :
 				session[ 'mdp' ] = mdp
 				
 				return redirect( '/usager/reservations/lister' )
-				
+				nG
 			else :
 				return render_template('vueConnexionUsager.html', carteBloquee = True , echecConnexion = False , saisieIncomplete = False )
 		else :
@@ -52,6 +52,7 @@ def seDeconnecterUsager() :
 
 @app.route( '/usager/reservations/lister' , methods = [ 'GET' ] )
 def listerReservations() :
+	print '[START] appResanet::listerReservations()'
 	tarifRepas = modeleResanet.getTarifRepas( session[ 'numeroCarte' ] )
 	
 	soldeCarte = modeleResanet.getSolde( session[ 'numeroCarte' ] )
@@ -90,8 +91,8 @@ def listerReservations() :
 		soldeInsuffisant = True
 	else :
 		soldeInsuffisant = False
-		
-	
+
+	print '[END] appResanet::listerReservations()'
 	return render_template( 'vueListeReservations.html' , laSession = session , leSolde = solde , lesDates = dates , soldeInsuffisant = soldeInsuffisant )
 
 	
@@ -132,8 +133,123 @@ def modifierMdpUsager() :
 
 
 @app.route( '/gestionnaire/session/choisir' , methods = [ 'GET' ] )
-def choisirSessionGestionnaire() :
-	return 'Formulaire authentification gestionnaire'
+def choisirSessionGestionnaire():
+	return render_template('vueConnexionGestionnaire.html')
+
+
+
+@app.route( '/gestionnaire/seConnecter', methods = [ 'POST' ] )
+def seConnecterGestionnaire() :
+	login = request.form[ 'login' ]
+	mdp = request.form[ 'mdp' ]
+	gestionnaire = modeleResanet.seConnecterGestionnaire(login, mdp)
+	listePersonnel = modeleResanet.getPersonnelsAvecCarte()
+
+	if login != '' and mdp != '':
+		if gestionnaire:
+			global nomGestionnaire
+			nomGestionnaire = str(gestionnaire['nom'])
+			global prenomGestionnaire
+			prenomGestionnaire = str(gestionnaire['prenom'])
+			session['login'] = gestionnaire['login']
+			session['nom'] = gestionnaire['nom']
+			session['prenom'] = gestionnaire['prenom']
+			session['mdp'] = mdp
+			return redirect("/gestionnaire/listePersonnelAvecCarte")
+
+		else:
+			return render_template('vueConnexionGestionnaire.html', echecConnexion=True)
+	else:
+		return render_template('vueConnexionGestionnaire.html', saisieIncomplete=True)
+
+
+sommeCrediter = 0
+
+def augmenterSommeCrediter(somme):
+	sommeCrediter = somme + 1
+
+def diminuerSommeCrediter(somme):
+	sommeCrediter = somme - 1
+
+@app.route( '/gestionnaire/listePersonnelAvecCarte', methods = [ 'GET' ] )
+def listePersonnelAvecCarte() :
+	return render_template('vuePersonnelAvecCarte.html',
+						   personnelAvecCarte=modeleResanet.getPersonnelsAvecCarte(),
+						   nomGestionnaire = nomGestionnaire, prenomGestionnaire = prenomGestionnaire,
+						   lenPersonnelAvecCarte=len(modeleResanet.getPersonnelsAvecCarte()),
+						   sommeCrediter = sommeCrediter, augmenterSommeCrediter = augmenterSommeCrediter(sommeCrediter),
+						   diminuerSommeCrediter = diminuerSommeCrediter(sommeCrediter)
+						   )
+
+
+
+@app.route( '/gestionnaire/listePersonnelSansCarte', methods = [ 'GET' ] )
+def listePersonnelSansCarte() :
+	return render_template('vuePersonnelSansCarte.html',
+						   personnelSansCarte=modeleResanet.getPersonnelsSansCarte(),
+						   nomGestionnaire = nomGestionnaire, prenomGestionnaire = prenomGestionnaire,
+						   lenPersonnelSansCarte=len(modeleResanet.getPersonnelsSansCarte())
+						   )
+
+
+
+@app.route('/gestionnaire/listePersonnelAvecCarte/bloquerCarte/<numCarte>', methods=['GET'])
+def bloquerCarte(numCarte):
+	modeleResanet.bloquerCarte(numCarte)
+	return redirect('/gestionnaire/listePersonnelAvecCarte')
+
+
+@app.route('/gestionnaire/listePersonnelAvecCarte/activerCarte/<numCarte>', methods=['GET'])
+def activerCarte(numCarte):
+	modeleResanet.activerCarte(numCarte)
+	return redirect('/gestionnaire/listePersonnelAvecCarte')
+
+
+@app.route('/gestionnaire/listePersonnelAvecCarte/reinitialiserMdp/<numCarte>', methods=['GET'])
+def reinitialiserMdp(numCarte):
+	modeleResanet.reinitialiserMdp(numCarte)
+	return redirect('/gestionnaire/listePersonnelAvecCarte')
+
+
+@app.route('/gestionnaire/listePersonnelAvecCarte/crediterCarte/<numCarte>/<somme>', methods=['GET'])
+def crediterCarte(numCarte, somme):
+	modeleResanet.crediterCarte(numCarte, somme)
+	return redirect('/gestionnaire/listePersonnelAvecCarte')
+
+
+@app.route('/gestionnaire/listePersonnelSansCarte/creerCarte/<matricule>', methods = [ 'GET' ])
+def creerCarte(matricule):
+	modeleResanet.creerCarte(matricule, activee=False)
+	return redirect('/gestionnaire/listePersonnelSansCarte')
+
+
+@app.route('/gestionnaire/listePersonnelAvecCarte/historique/<numCarte>')
+def historiqueCarte(numCarte):
+	historiqueCarte = modeleResanet.getHistoriqueReservationsCarte(numCarte)
+	return render_template('vueHistoriqueReservationCarte.html',
+						   historiqueCarte = historiqueCarte
+						   )
+
+@app.route('/gestionnaire/listePersonnelAvecCarte/reservation/<numCarte><dateDebut><dateFin>')
+def reservation():
+	getReservation = modeleResanet.getReservationsCarte(numCarte, dateDebut, dateFin),
+
+
+
+@app.route('/gestionnaire/gererCarte', methods = [ 'GET' ] )
+def gererCarteRestauration():
+	return redirect('/gestionnaire/listePersonnelAvecCarte')
+
+
+@app.route( '/gestionnaire/seDeconnecter' , methods = [ 'GET' ] )
+def seDeconnecterGestionnaire() :
+	session.pop( 'login' , None )
+	session.pop( 'nom' , None )
+	session.pop( 'prenom' , None )
+	return redirect( '/' )
+
+
+
 
 
 if __name__ == '__main__' :

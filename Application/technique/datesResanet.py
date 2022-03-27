@@ -5,8 +5,10 @@ import datetime
 
 
 def convertirDateISOversFR( dateISO ) :
+	print '[START] datesResanet::convertirDateISOversFR()'
 	annee , mois , jour = dateISO.split( '-' )
 	dateFR = '/'.join( ( jour , mois , annee ) )
+	print '[END] datesResanet::convertirDateISOversFR()'
 	return dateFR
 	
 def convertirDateFRversISO( dateFR ) :
@@ -20,11 +22,14 @@ def getDateAujourdhuiFR() :
 	return aujourdhui
 	
 def getDateAujourdhuiISO() :
+	print '[START] datesResanet::getDateAujourdhuiISO()'
 	dateCourante = datetime.datetime.today()
 	aujourdhui = '%04d-%02d-%02d' % ( dateCourante.year , dateCourante.month , dateCourante.day )
+	print '[END] datesResanet::getDateAujourdhuiISO()'
 	return aujourdhui
 	
 def getDatesPeriodeCouranteISO() :
+	print '[START] datesResanet::getDatesPeriodeCouranteISO()'
 	dates = []
 	
 	dateAujourdhui= datetime.datetime.today()
@@ -38,7 +43,7 @@ def getDatesPeriodeCouranteISO() :
 			dates.append( dateISO )
 			
 		dateCourante = dateCourante + datetime.timedelta( 1 )
-		 
+	print '[END] datesResanet::getDatesPeriodeCouranteISO()'
 	return dates
 
 
